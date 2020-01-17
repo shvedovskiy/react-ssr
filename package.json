@@ -1,0 +1,23 @@
+{
+  "name": "react-ssr",
+  "private": true,
+  "version": "0.0.1",
+  "description": "React SSR application template",
+  "keywords": ["react", "ssr"],
+  "homepage": "https://github.com/shvedovskiy/react-ssr#readme",
+  "repository": "github:shvedovskiy/react-ssr",
+  "bugs": {
+    "url": "https://github.com/shvedovskiy/react-ssr/issues",
+    "email": "ol.shvedov@gmail.com"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Oleg Shvedov <ol.shvedov@gmail.com> (shvedovskiy.github.com)",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}
