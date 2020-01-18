@@ -1,3 +1,9 @@
-const v = 42;
+import React from 'react';
+import { render } from 'react-dom';
 
-console.log(v);
+import { App } from './components/app/app';
+
+render(
+  <App />,
+  document.getElementById('root')
+);
