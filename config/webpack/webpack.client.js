@@ -17,7 +17,8 @@ module.exports = merge(common, {
   plugins: [
     new HTMLWebpackPlugin({
       title: APPLICATION_TITLE,
-      template: '!!handlebars-loader!src/public/index.hbs',
+      template: '!!handlebars-loader!public/index.hbs',
+      filename: '../index.html',
       minify: true
     }),
     ...(isDev ? [
