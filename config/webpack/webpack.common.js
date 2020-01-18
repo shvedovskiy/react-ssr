@@ -13,7 +13,6 @@ module.exports.commonConfig = function (platform) {
     context: paths.appDirectory,
     mode: isDev ? 'development' : 'production',
     devtool: isDev ? 'cheap-module-inline-source-map' : 'source-map',
-    entry: paths[platform].src,
     output: {
       path: paths[platform].output,
       filename: isDev ? '[name].js' : '[name].[contenthash].js',
@@ -49,6 +48,17 @@ module.exports.commonConfig = function (platform) {
         'typeof window': JSON.stringify(isServer ? 'undefined' : 'object'),
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       })
-    ]
+    ],
+    stats: {
+      assetsSort: '!size',
+      builtAt: false,
+      cached: false,
+      cachedAssets: false,
+      colors: true,
+      hash: false,
+      modules: false,
+      reasons: false,
+      version: false,
+    }
   };
 }

@@ -7,20 +7,19 @@ const isDev = NODE_ENV === 'development';
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
-const publicPath = '/static/';
 
 module.exports = {
   isDev,
   paths: {
     client: {
       src: resolveApp('src'),
-      output: resolveApp(path.join('build', publicPath))
+      output: resolveApp('build')
     },
     server: {
       src: resolveApp('server'),
       output: resolveApp('www')
     },
     appDirectory,
-    publicPath
+    publicPath: '/static/'
   }
 }

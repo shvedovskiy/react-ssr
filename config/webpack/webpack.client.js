@@ -1,26 +1,22 @@
-const webpack = require('webpack');
+const path = require('path');
 const merge = require('webpack-merge');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 const { commonConfig } = require('./webpack.common');
-const { isDev } = require('../settings');
-const { APPLICATION_TITLE } = require('../env');
+const { isDev, paths } = require('../settings');
 
-const common = commonConfig('client');
-module.exports = merge(common, {
+module.exports = merge(commonConfig('client'), {
   entry: {
     main: [
       // isDev && 'webpack-hot-middleware/client?reload=true',
-      common.entry
+      paths.client.src
     ].filter(Boolean)
   },
+  output: {
+    path: path.join(paths.client.output, paths.publicPath),
+  },
   plugins: [
-    new HTMLWebpackPlugin({
-      title: APPLICATION_TITLE,
-      template: '!!handlebars-loader!public/index.hbs',
-      filename: '../index.html',
-      minify: true
-    }),
+    new ManifestPlugin({ fileName: 'manifest.json' }),
     ...(isDev ? [
       // new webpack.HotModuleReplacementPlugin()
     ] : [])

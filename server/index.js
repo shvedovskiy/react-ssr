@@ -1,25 +1,25 @@
-// import express from 'express';
-// import cors from 'cors';
-// import bodyParser from 'body-parser';
+import path from 'path';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import manifestHelpers from 'express-manifest-helpers';
 
-// import { PORT } from '../config/env';
-// import { paths } from '../config/settings';
-
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-
-const { PORT } = require('../config/env');
-const { paths } = require('../config/settings');
+import { PORT } from '../config/env';
+import { paths } from '../config/settings';
+import { renderer } from './middleware/renderer';
 
 const app = express();
 
-app.use(paths.publicPath, express.static(paths.client.output));
-app.use(express.static('build')); // TODO change to SSR
+app.use(express.static(path.join(paths.client.output)));
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(manifestHelpers({
+  manifestPath: path.join(paths.client.output, paths.publicPath, 'manifest.json')
+}));
+app.use(renderer());
 
 app.listen(PORT, err => {
   if (err) {

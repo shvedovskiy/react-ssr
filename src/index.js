@@ -1,6 +1,12 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { App } from './components/app/app';
 
-render(<App />, document.getElementById('root'));
+hydrate(
+  <HelmetProvider>
+    <App />
+  </HelmetProvider>,
+  document.getElementById('root')
+);
