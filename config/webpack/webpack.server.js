@@ -10,7 +10,27 @@ module.exports = merge(commonConfig('server'), {
     server: paths.server.src
   },
   output: {
+    library: 'app',
     libraryTarget: 'commonjs2'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        loader: 'css-loader/locals'
+      },
+      {
+        test: /\.(ttf|eot|otf|svg|png)$/,
+        loader: 'file-loader?emitFile=false'
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        loader: 'url-loader?emitFile=false'
+      }
+    ]
+  },
+  optimization: {
+    minimize: false,
   },
   externals: [
     nodeExternals({

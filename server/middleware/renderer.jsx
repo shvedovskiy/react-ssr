@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { App } from 'components/app/app';
 import { HTML } from '../components/html';
 import { APPLICATION_TITLE } from '../../config/env';
+import { getInlinedJavaScript, getJavaScript } from './utils';
 
 const helmetContext = {
   helmet: {
@@ -12,25 +13,25 @@ const helmetContext = {
   }
 };
 
-function getJavaScript(manifest) {
-  return Object.keys(manifest)
-    .filter(key => key.match(/\.js$/))
-    .map(key => manifest[key] || '');
-}
+export function renderer(manifest) {
+  const inlineScripts = getInlinedJavaScript(manifest);
+  const scripts = getJavaScript(manifest);
 
-export const renderer = manifest => (req, res) => {
-  const content = renderToString(
-    <HelmetProvider context={helmetContext}>
-      <App />
-    </HelmetProvider>
-  );
+  return (req, res) => {
+    const content = renderToString(
+      <HelmetProvider context={helmetContext}>
+        <App />
+      </HelmetProvider>
+    );
 
-  return res.send('<!DOCTYPE html>' + renderToString(
-    <HTML
-      scripts={getJavaScript(manifest)}
-      helmetContext={helmetContext}
-    >
-      {content}
-    </HTML>
-  ));
+    return res.send('<!DOCTYPE html>' + renderToString(
+      <HTML
+        inlineScripts={inlineScripts}
+        scripts={scripts}
+        helmetContext={helmetContext}
+      >
+        {content}
+      </HTML>
+    ));
+  };
 };

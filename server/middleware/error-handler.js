@@ -11,5 +11,5 @@ export const errorHandler = (err, req, res, next) =>
         .split('\n')
         .map(line => line.trim())
         .map(line => line.split(path.sep).join('/'))
-        // .map(line => line.replace(process.cwd().split(path.sep).join('/'), '.'))
+        .map(line => line.replace(process.cwd().split(path.sep).join('/'), '.'))
 });

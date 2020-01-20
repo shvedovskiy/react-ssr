@@ -15,7 +15,6 @@ module.exports.commonConfig = function (platform) {
     devtool: isDev ? 'cheap-module-inline-source-map' : 'source-map',
     output: {
       path: paths[platform].output,
-      filename: isDev ? '[name].js' : '[name].[contenthash].js',
       publicPath: paths.publicPath
     },
     module: {
@@ -26,6 +25,7 @@ module.exports.commonConfig = function (platform) {
           use: {
             loader: 'babel-loader',
             options: {
+              envName: platform,
               cacheDirectory: true,
               cacheCompression: !isDev,
               compact: !isDev
@@ -47,8 +47,14 @@ module.exports.commonConfig = function (platform) {
         IS_SERVER: JSON.stringify(isServer),
         'typeof window': JSON.stringify(isServer ? 'undefined' : 'object'),
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-      })
+      }),
+      ...(isDev ? [
+        new webpack.HotModuleReplacementPlugin()
+      ] : [])
     ],
+    performance: {
+      hints: isDev ? false : 'warning'
+    },
     stats: {
       assetsSort: '!size',
       builtAt: false,

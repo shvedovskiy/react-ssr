@@ -4,6 +4,7 @@ import jsesc from 'jsesc';
 export const HTML = ({
   children,
   css = [],
+  inlineScripts = [],
   scripts = [],
   state = {},
   helmetContext: { helmet }
@@ -17,19 +18,17 @@ export const HTML = ({
       {helmet.meta.toComponent()}
       {helmet.link.toComponent()}
       {helmet.script.toComponent()}
-      {css.filter(Boolean).map((href) =>
-        <link key={href} rel="stylesheet" href={href} />
+      {css.filter(Boolean).map(href => <link key={href} rel="stylesheet" href={href} />)}
+      {inlineScripts.filter(Boolean).map((content, index) =>
+        <script key={index} dangerouslySetInnerHTML={{ __html: content }} />
       )}
       <script dangerouslySetInnerHTML={{
         __html: `window.__PRELOADED_STATE__ = ${jsesc(JSON.stringify(state), { json: true, isScriptContext: true, wrap: true })}`,
-      }}
-      />
+      }}/>
     </head>
     <body>
       <div id="root" dangerouslySetInnerHTML={{ __html: children }} />
-      {scripts.filter(Boolean).map((src) =>
-        <script key={src} src={src} />
-      )}
+      {scripts.filter(Boolean).map(src => <script key={src} src={src} />)}
     </body>
   </html>
 );
