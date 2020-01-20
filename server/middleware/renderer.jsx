@@ -12,7 +12,13 @@ const helmetContext = {
   }
 };
 
-export const renderer = () => (req, res) => {
+function getJavaScript(manifest) {
+  return Object.keys(manifest)
+    .filter(key => key.match(/\.js$/))
+    .map(key => manifest[key] || '');
+}
+
+export const renderer = manifest => (req, res) => {
   const content = renderToString(
     <HelmetProvider context={helmetContext}>
       <App />
@@ -21,7 +27,7 @@ export const renderer = () => (req, res) => {
 
   return res.send('<!DOCTYPE html>' + renderToString(
     <HTML
-      scripts={[res.locals.assetPath('main.js')]}
+      scripts={getJavaScript(manifest)}
       helmetContext={helmetContext}
     >
       {content}

@@ -37,7 +37,7 @@ async function build() {
     await serverPromise;
     console.info(chalk.blue('Done!'));
   } catch (err) {
-    console.error(chalk.red(error));
+    console.error(chalk.red('Webpack is failed: ', err));
   } finally {
     process.exit(0);
   }

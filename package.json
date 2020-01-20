@@ -17,7 +17,7 @@
   "author": "Oleg Shvedov <ol.shvedov@gmail.com> (shvedovskiy.github.com)",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "start": "cross-env NODE_ENV=development node config/scripts/start.js",
     "build": "cross-env NODE_ENV=production node config/scripts/build.js"
   },
   "devDependencies": {
@@ -26,10 +26,12 @@
     "@babel/preset-react": "^7.8.3",
     "babel-loader": "^8.0.6",
     "chalk": "^3.0.0",
+    "nodemon": "^2.0.2",
     "rimraf": "^3.0.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-hot-middleware": "^2.25.0",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "^4.2.2",
     "webpack-node-externals": "^1.7.2"
@@ -39,7 +41,6 @@
     "cors": "^2.8.5",
     "cross-env": "^6.0.3",
     "express": "^4.17.1",
-    "express-manifest-helpers": "^0.6.0",
     "jsesc": "^2.5.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

@@ -1,30 +1,47 @@
-import path from 'path';
+import fs from 'fs';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import manifestHelpers from 'express-manifest-helpers';
+import chalk from 'chalk';
 
-import { PORT } from '../config/env';
+import { HTTPS, HOST, PORT } from '../config/env';
 import { paths } from '../config/settings';
 import { renderer } from './middleware/renderer';
+import { errorHandler } from './middleware/error-handler';
 
+const serverURL = `http${HTTPS ? 's' : ''}://${HOST}:${PORT || ''}`;
 const app = express();
-
-app.use(express.static(path.join(paths.client.output)));
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(paths.client.output));
 
-app.use(manifestHelpers({
-  manifestPath: path.join(paths.client.output, paths.publicPath, 'manifest.json')
-}));
-app.use(renderer());
+let manifest;
+try {
+  manifest = JSON.parse(fs.readFileSync(paths.manifestPath, 'utf8'));
+} catch (err) {
+  throw new Error('Asset Manifest could not be loaded: ', err);
+}
 
-app.listen(PORT, err => {
+app.get('/favicon.ico', (req, res) => {
+  res.redirect('https://yandex.st/lego/_/pDu9OWAQKB0s2J9IojKpiS_Eho.ico');
+});
+
+app.use(renderer(manifest));
+app.use(errorHandler);
+
+let server;
+
+process.once('SIGUSR2', () => {
+  server.close();
+  process.kill(process.pid, 'SIGUSR2');
+});
+
+server = app.listen(PORT, err => {
   if (err) {
-    console.error(err);
+    console.error(chalk.red('Server is not started: ', err));
   } else {
-    console.info(`Server running at ${PORT}`);
+    console.info(chalk.blue(`Server running at ${serverURL}`));
   }
 });
