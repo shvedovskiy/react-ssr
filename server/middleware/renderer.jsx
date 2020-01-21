@@ -13,9 +13,9 @@ const helmetContext = {
   }
 };
 
-export function renderer(manifest) {
-  const inlineScripts = getInlinedJavaScript(manifest);
-  const scripts = getJavaScript(manifest);
+export default function renderer(entrypoints = []) {
+  // const inlineScripts = getInlinedJavaScript(manifest);
+  const scripts = getJavaScript(entrypoints);
 
   return (req, res) => {
     const content = renderToString(
@@ -26,7 +26,6 @@ export function renderer(manifest) {
 
     return res.send('<!DOCTYPE html>' + renderToString(
       <HTML
-        inlineScripts={inlineScripts}
         scripts={scripts}
         helmetContext={helmetContext}
       >
@@ -34,4 +33,4 @@ export function renderer(manifest) {
       </HTML>
     ));
   };
-};
+}

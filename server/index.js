@@ -6,8 +6,8 @@ import chalk from 'chalk';
 
 import { HTTPS, HOST, PORT } from '../config/env';
 import { paths } from '../config/settings';
-import { renderer } from './middleware/renderer';
-import { errorHandler } from './middleware/error-handler';
+import renderer from './middleware/renderer';
+import errorHandler from './middleware/error-handler';
 
 const serverURL = `http${HTTPS ? 's' : ''}://${HOST}:${PORT || ''}`;
 const app = express();
@@ -28,17 +28,10 @@ try {
   throw new Error('Asset Manifest could not be loaded: ', err);
 }
 
-app.use(renderer(manifest));
+app.use(renderer(manifest.entrypoints));
 app.use(errorHandler);
 
-let server;
-
-process.once('SIGUSR2', () => {
-  server.close();
-  process.kill(process.pid, 'SIGUSR2');
-});
-
-server = app.listen(PORT, err => {
+app.listen(PORT, err => {
   if (err) {
     console.error(chalk.red('Server is not started: ', err));
   } else {

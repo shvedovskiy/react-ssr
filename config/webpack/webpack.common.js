@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const { NODE_ENV } = require('../env');
 const settings = require('../settings');
@@ -12,13 +13,18 @@ module.exports.commonConfig = function (platform) {
     name: platform,
     context: paths.appDirectory,
     mode: isDev ? 'development' : 'production',
+    bail: !isDev,
     devtool: isDev ? 'cheap-module-inline-source-map' : 'source-map',
     output: {
       path: paths[platform].output,
-      publicPath: paths.publicPath
+      pathinfo: isDev,
+      publicPath: paths.publicPath,
+      globalObject: 'this',
     },
     module: {
+      strictExportPresence: true,
       rules: [
+        { parser: { requireEnsure: false } },
         {
           test: /\.jsx?/i,
           exclude: /node_modules/,
@@ -49,7 +55,10 @@ module.exports.commonConfig = function (platform) {
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       }),
       ...(isDev ? [
-        new webpack.HotModuleReplacementPlugin()
+        // Watcher doesn't work well if you mistype casing in a path so we use
+        // a plugin that prints an error when you attempt to do this.
+        // See https://github.com/facebook/create-react-app/issues/240
+        new CaseSensitivePathsPlugin(),
       ] : [])
     ],
     performance: {

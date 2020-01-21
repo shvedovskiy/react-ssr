@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const nodemon = require('nodemon');
 const express = require('express');
+const chokidar = require('chokidar');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const chalk = require('chalk');
@@ -14,24 +14,15 @@ const { PORT } = require('../env');
 const { compilerPromise } = require('./utils');
 
 async function start() {
-  rimraf.sync(paths.client.output);
   rimraf.sync(paths.server.output);
 
   const app = express();
-  const WEBPACK_PORT = PORT + 1;
-  const devserverURL = `http://localhost:${WEBPACK_PORT}`;
 
   clientConfig.entry.main = [
-    `webpack-hot-middleware/client?path=${devserverURL}/__webpack_hmr`,
+    `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&reload=true`,
+    'react-hot-loader/patch',
     clientConfig.entry.main
   ];
-  clientConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
-  clientConfig.output.hotUpdateChunkFilename = 'updates/[id].[hash].hot-update.js';
-
-  clientConfig.output.publicPath = path.join(devserverURL, paths.publicPath)
-    .replace(/([^:+])\/+/g, '$1/');
-  serverConfig.output.publicPath = path.join(devserverURL, paths.publicPath)
-    .replace(/([^:+])\/+/g, '$1/');
 
   const clientCompiler = webpack(clientConfig);
   const serverCompiler = webpack(serverConfig);
@@ -48,18 +39,18 @@ async function start() {
     res.header('Access-Control-Allow-Origin', '*');
     return next();
   });
+  // app.get('/favicon.ico', (req, res) => {
+  //   res.redirect('https://yandex.st/lego/_/pDu9OWAQKB0s2J9IojKpiS_Eho.ico');
+  // });
+
   app.use(webpackDevMiddleware(clientCompiler, {
     index: false,
     publicPath: paths.publicPath,
     stats: clientConfig.stats,
     watchOptions,
-    writeToDisk(filePath) {
-      return /\/static\//.test(filePath);
-    }
+    serverSideRender: true,
   }));
   app.use(webpackHotMiddleware(clientCompiler));
-  app.use(express.static(paths.client.output));
-  app.listen(WEBPACK_PORT);
 
   const serverWatch = serverCompiler.watch(watchOptions, (err, stats) => {
     if (!err && !stats.hasErrors()) {
@@ -80,34 +71,41 @@ async function start() {
   } catch (err) {
     console.error(chalk.red('Webpack is failed: ', err));
   }
+  const rendererPath = path.join(paths.server.output, paths.server.outputFileName);
+  const watcher = chokidar.watch(rendererPath);
 
-  const script = nodemon({
-    script: path.join(paths.server.output, 'server.js'),
-    watch: paths.server.output,
-    delay: 200
+  watcher.on('ready', () => {
+    watcher.on('all', () => {
+      Object.keys(require.cache).forEach(id => {
+        if (id.endsWith(paths.server.outputFileName)) {
+          delete require.cache[id];
+        }
+      })
+    });
   });
 
-  script.on('restart', () => {
-    console.info(chalk.green('\nServer side app has been restarted'));
+  app.use((req, res, next) => {
+    const statsEntrypoints = res.locals.webpackStats.toJson().entrypoints;
+    const entrypoints = Object.keys(statsEntrypoints).reduce(
+      (res, key) => res.concat(statsEntrypoints[key].assets)
+    , []);
+
+    return require(rendererPath).default(entrypoints)(req, res, next);
   });
 
-  script.on('quit', () => {
-    console.info(chalk.magenta('\nProcess ended'));
-    exit();
-  });
-
-  script.on('error', () => {
-    console.error(chalk.red('\nAn error occured. Exiting', 'error'));
-    exit(1);
+  app.listen(PORT, err => {
+    if (err) {
+      console.error(chalk.red('Server is not started: ', err));
+    } else {
+      console.info(chalk.blue(`Server running at http://localhost:${PORT}`));
+    }
   });
 
   ['SIGINT', 'SIGTERM'].forEach((sig) => {
-    process.on(sig, exit);
+    process.on(sig, () => {
+      serverWatch.close();
+      process.exit();
+    });
   });
-
-  function exit(exitCode = 0) {
-    serverWatch.close();
-    process.exit(exitCode);
-  }
 }
 start();

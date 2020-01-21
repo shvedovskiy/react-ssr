@@ -10,8 +10,7 @@ module.exports = merge(commonConfig('server'), {
     server: paths.server.src
   },
   output: {
-    library: 'app',
-    libraryTarget: 'commonjs2'
+    filename: paths.server.outputFileName
   },
   module: {
     rules: [

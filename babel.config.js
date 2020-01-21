@@ -3,23 +3,26 @@ module.exports = {
     client: {
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
-            useBuiltIns: "usage",
+            useBuiltIns: 'usage',
             modules: false,
             corejs: 3,
             shippedProposals: true
           }
         ],
-        "@babel/preset-react"
+        '@babel/preset-react',
+      ],
+      plugins: [
+        'react-hot-loader/babel'
       ]
     },
     server: {
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
-            useBuiltIns: "usage",
+            useBuiltIns: 'usage',
             modules: false,
             corejs: 3,
             shippedProposals: true,
@@ -28,7 +31,7 @@ module.exports = {
             }
           }
         ],
-        "@babel/preset-react"
+        '@babel/preset-react'
       ]
     }
   }

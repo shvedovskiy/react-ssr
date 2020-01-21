@@ -6,7 +6,7 @@ const { NODE_ENV } = require('./env');
 const isDev = NODE_ENV === 'development';
 
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = (...relativePaths) => path.resolve(appDirectory, ...relativePaths);
 
 module.exports = {
   isDev,
@@ -16,8 +16,11 @@ module.exports = {
       output: resolveApp('build')
     },
     server: {
-      src: resolveApp('server'),
-      output: resolveApp('www')
+      src: isDev ?
+        resolveApp('server', 'middleware', 'renderer.jsx') :
+        resolveApp('server'),
+      output: resolveApp('www'),
+      outputFileName: isDev? 'renderer.js' : 'server.js',
     },
     appDirectory,
     publicPath: '/',
