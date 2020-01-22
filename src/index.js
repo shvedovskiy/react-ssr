@@ -8,5 +8,5 @@ hydrate(
   <HelmetProvider>
     <App />
   </HelmetProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

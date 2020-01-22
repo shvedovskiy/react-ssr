@@ -12,6 +12,6 @@ module.exports = {
         }
         return reject(`Failed to compile ${name}`);
       });
-    })
-  }
+    });
+  },
 };

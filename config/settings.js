@@ -13,17 +13,16 @@ module.exports = {
   paths: {
     client: {
       src: resolveApp('src'),
-      output: resolveApp('build')
+      output: resolveApp('server', 'public'),
     },
     server: {
-      src: isDev ?
-        resolveApp('server', 'middleware', 'renderer.jsx') :
-        resolveApp('server'),
-      output: resolveApp('www'),
-      outputFileName: isDev? 'renderer.js' : 'server.js',
+      src: isDev ? resolveApp('server', 'middleware', 'renderer.jsx') : resolveApp('server'),
+      output: resolveApp('server', 'bin', 'www'),
+      outputFileName: isDev ? 'renderer.js' : 'server.js',
     },
+    appPublic: resolveApp('src', 'public'),
     appDirectory,
     publicPath: '/',
-    manifestPath: resolveApp(path.join('build', 'asset-manifest.json')),
-  }
-}
+    manifestPath: resolveApp(path.join('server', 'public', 'asset-manifest.json')),
+  },
+};

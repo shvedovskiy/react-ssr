@@ -1,0 +1,32 @@
+{
+  "useTabs": false,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "printWidth": 95,
+  "trailingComma": "all",
+  "jsxBracketSameLine": false,
+  "endOfLine": "lf",
+  "semi": true,
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "printWidth": 200
+      }
+    },
+    {
+      "files": "*.css",
+      "options": {
+        "singleQuote": false,
+        "printWidth": 200
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "singleQuote": false,
+        "printWidth": 200
+      }
+    }
+  ]
+}

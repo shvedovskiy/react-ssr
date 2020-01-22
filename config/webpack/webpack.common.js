@@ -6,7 +6,7 @@ const settings = require('../settings');
 
 const { isDev, paths } = settings;
 
-module.exports.commonConfig = function (platform) {
+module.exports.commonConfig = function(platform) {
   const isServer = platform === 'server';
 
   return {
@@ -34,18 +34,14 @@ module.exports.commonConfig = function (platform) {
               envName: platform,
               cacheDirectory: true,
               cacheCompression: !isDev,
-              compact: !isDev
-            }
-          }
-        }
-      ]
+              compact: !isDev,
+            },
+          },
+        },
+      ],
     },
     resolve: {
-      modules: [
-        paths.client.src,
-        paths.server.src,
-        'node_modules'
-      ],
+      modules: [paths.client.src, paths.server.src, 'node_modules'],
       extensions: ['.js', '.jsx', '.json'],
     },
     plugins: [
@@ -54,15 +50,17 @@ module.exports.commonConfig = function (platform) {
         'typeof window': JSON.stringify(isServer ? 'undefined' : 'object'),
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       }),
-      ...(isDev ? [
-        // Watcher doesn't work well if you mistype casing in a path so we use
-        // a plugin that prints an error when you attempt to do this.
-        // See https://github.com/facebook/create-react-app/issues/240
-        new CaseSensitivePathsPlugin(),
-      ] : [])
+      ...(isDev
+        ? [
+            // Watcher doesn't work well if you mistype casing in a path so we use
+            // a plugin that prints an error when you attempt to do this.
+            // See https://github.com/facebook/create-react-app/issues/240
+            new CaseSensitivePathsPlugin(),
+          ]
+        : []),
     ],
     performance: {
-      hints: isDev ? false : 'warning'
+      hints: isDev ? false : 'warning',
     },
     stats: {
       assetsSort: '!size',
@@ -74,6 +72,6 @@ module.exports.commonConfig = function (platform) {
       modules: false,
       reasons: false,
       version: false,
-    }
+    },
   };
-}
+};

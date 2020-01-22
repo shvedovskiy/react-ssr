@@ -8,14 +8,12 @@ module.exports = {
             useBuiltIns: 'usage',
             modules: false,
             corejs: 3,
-            shippedProposals: true
-          }
+            shippedProposals: true,
+          },
         ],
         '@babel/preset-react',
       ],
-      plugins: [
-        'react-hot-loader/babel'
-      ]
+      plugins: ['react-hot-loader/babel'],
     },
     server: {
       presets: [
@@ -27,12 +25,12 @@ module.exports = {
             corejs: 3,
             shippedProposals: true,
             targets: {
-              node: 12
-            }
-          }
+              node: 12,
+            },
+          },
         ],
-        '@babel/preset-react'
-      ]
-    }
-  }
+        '@babel/preset-react',
+      ],
+    },
+  },
 };

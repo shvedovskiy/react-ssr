@@ -21,7 +21,7 @@ async function start() {
   clientConfig.entry.main = [
     `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&reload=true`,
     'react-hot-loader/patch',
-    clientConfig.entry.main
+    clientConfig.entry.main,
   ];
 
   const clientCompiler = webpack(clientConfig);
@@ -39,18 +39,18 @@ async function start() {
     res.header('Access-Control-Allow-Origin', '*');
     return next();
   });
-  // app.get('/favicon.ico', (req, res) => {
-  //   res.redirect('https://yandex.st/lego/_/pDu9OWAQKB0s2J9IojKpiS_Eho.ico');
-  // });
 
-  app.use(webpackDevMiddleware(clientCompiler, {
-    index: false,
-    publicPath: paths.publicPath,
-    stats: clientConfig.stats,
-    watchOptions,
-    serverSideRender: true,
-  }));
+  app.use(
+    webpackDevMiddleware(clientCompiler, {
+      index: false,
+      publicPath: paths.publicPath,
+      stats: clientConfig.stats,
+      watchOptions,
+      serverSideRender: true,
+    }),
+  );
   app.use(webpackHotMiddleware(clientCompiler));
+  app.use(express.static(paths.appPublic));
 
   const serverWatch = serverCompiler.watch(watchOptions, (err, stats) => {
     if (!err && !stats.hasErrors()) {
@@ -78,17 +78,19 @@ async function start() {
     watcher.on('all', () => {
       Object.keys(require.cache).forEach(id => {
         if (id.endsWith(paths.server.outputFileName)) {
+          console.log('alo');
           delete require.cache[id];
         }
-      })
+      });
     });
   });
 
   app.use((req, res, next) => {
     const statsEntrypoints = res.locals.webpackStats.toJson().entrypoints;
     const entrypoints = Object.keys(statsEntrypoints).reduce(
-      (res, key) => res.concat(statsEntrypoints[key].assets)
-    , []);
+      (res, key) => res.concat(statsEntrypoints[key].assets),
+      [],
+    );
 
     return require(rendererPath).default(entrypoints)(req, res, next);
   });
@@ -101,7 +103,7 @@ async function start() {
     }
   });
 
-  ['SIGINT', 'SIGTERM'].forEach((sig) => {
+  ['SIGINT', 'SIGTERM'].forEach(sig => {
     process.on(sig, () => {
       serverWatch.close();
       process.exit();

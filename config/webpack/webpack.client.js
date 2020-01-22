@@ -11,62 +11,66 @@ const { isDev, paths } = require('../settings');
 
 module.exports = merge(commonConfig('client'), {
   entry: {
-    main: paths.client.src
+    main: paths.client.src,
   },
   output: {
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash:8].js',
-    chunkFilename: isDev ? 'static/js/[name].chunk.js' : 'static/js/[name].[contenthash:8].chunk.js',
+    chunkFilename: isDev
+      ? 'static/js/[name].chunk.js'
+      : 'static/js/[name].[contenthash:8].chunk.js',
   },
   resolve: {
-    alias: isDev ? {
-      'react-dom': '@hot-loader/react-dom'
-    } : {}
+    alias: isDev
+      ? {
+          'react-dom': '@hot-loader/react-dom',
+        }
+      : {},
   },
   optimization: {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-            parse: {
-              // we want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minfication steps that turns valid ecma 5 code
-              // into invalid ecma 5 code. This is why the 'compress' and 'output'
-              // sections only apply transformations that are ecma 5 safe
-              // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
-            },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
-              // Disabled because of an issue with Terser breaking valid code:
-              // https://github.com/facebook/create-react-app/issues/5250
-              // Pending futher investigation:
-              // https://github.com/terser-js/terser/issues/120
-              inline: 2,
-            },
-            mangle: {
-              safari10: true,
-            },
-            keep_classnames: !isDev,
-            keep_fnames: !isDev,
-            output: {
-              ecma: 5,
-              comments: false,
-              // Turned on because emoji and regex is not minified properly using default
-              // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
+          parse: {
+            // we want terser to parse ecma 8 code. However, we don't want it
+            // to apply any minfication steps that turns valid ecma 5 code
+            // into invalid ecma 5 code. This is why the 'compress' and 'output'
+            // sections only apply transformations that are ecma 5 safe
+            // https://github.com/facebook/create-react-app/pull/4234
+            ecma: 8,
+          },
+          compress: {
+            ecma: 5,
+            warnings: false,
+            // Disabled because of an issue with Uglify breaking seemingly valid code:
+            // https://github.com/facebook/create-react-app/issues/2376
+            // Pending further investigation:
+            // https://github.com/mishoo/UglifyJS2/issues/2011
+            comparisons: false,
+            // Disabled because of an issue with Terser breaking valid code:
+            // https://github.com/facebook/create-react-app/issues/5250
+            // Pending futher investigation:
+            // https://github.com/terser-js/terser/issues/120
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+          keep_classnames: !isDev,
+          keep_fnames: !isDev,
+          output: {
+            ecma: 5,
+            comments: false,
+            // Turned on because emoji and regex is not minified properly using default
+            // https://github.com/facebook/create-react-app/issues/2488
+            ascii_only: true,
+          },
         },
         // Use multi-process parallel running to improve the build speed
         // Default number of concurrent runs: os.cpus().length - 1
         parallel: true,
         // Enable file caching
         cache: true,
-        sourceMap: true
+        sourceMap: true,
       }),
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
@@ -77,17 +81,17 @@ module.exports = merge(commonConfig('client'), {
             inline: false,
             // `annotation: true` appends the sourceMappingURL to the end of
             // the css file, helping the browser find the sourcemap
-            annotation: true
-          }
-        }
-      })
+            annotation: true,
+          },
+        },
+      }),
     ],
     splitChunks: {
       chunks: 'all',
       name: false,
     },
     runtimeChunk: {
-      name: entrypoint => `runtime-${entrypoint.name}`
+      name: entrypoint => `runtime-${entrypoint.name}`,
     },
   },
   plugins: [
@@ -100,7 +104,7 @@ module.exports = merge(commonConfig('client'), {
           return manifest;
         }, seed);
         const entrypointFiles = entrypoints.main.filter(
-          fileName => !fileName.endsWith('.map')
+          fileName => !fileName.endsWith('.map'),
         );
 
         return {
@@ -109,15 +113,15 @@ module.exports = merge(commonConfig('client'), {
         };
       },
     }),
-    ...(isDev ? [
-      new webpack.HotModuleReplacementPlugin(),
-    ] : []),
-    ...(!isDev ? [
-      new MiniCssExtractPlugin({
-        filename: 'static/css/[name].[contenthash:8].css',
-        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      }),
-    ] : []),
+    ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
+    ...(!isDev
+      ? [
+          new MiniCssExtractPlugin({
+            filename: 'static/css/[name].[contenthash:8].css',
+            chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+          }),
+        ]
+      : []),
   ],
   node: {
     module: 'empty',
@@ -127,6 +131,6 @@ module.exports = merge(commonConfig('client'), {
     http2: 'empty',
     net: 'empty',
     tls: 'empty',
-    child_process: 'empty'
-  }
+    child_process: 'empty',
+  },
 });

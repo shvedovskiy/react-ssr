@@ -1,0 +1,85 @@
+defaults: &defaults
+  docker:
+      - image: circleci/node:12
+  working_directory: ~/react-ssr
+
+version: 2.1
+orbs:
+  heroku: circleci/heroku@0.0.10
+jobs:
+  prepare:
+    <<: *defaults
+    steps:
+        - checkout
+        - restore_cache:
+            keys:
+                - dependencies-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+                - dependencies-cache-
+        - run:
+            name: Install NPM packages
+            command: npm i
+        - save_cache:
+            key: dependencies-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+            paths:
+                - 'node_modules'
+        - persist_to_workspace:
+            root: .
+            paths:
+                - .
+  lint:
+    <<: *defaults
+    steps:
+        - attach_workspace:
+            at: .
+        - run:
+            name: Run Prettier, ESLint and Stylelint
+            command: npm run lint
+  build:
+    <<: *defaults
+    steps:
+        - attach_workspace:
+            at: .
+        - run:
+            name: Build application
+            command: npm run build
+        - persist_to_workspace:
+            root: .
+            paths:
+                - www
+                - build
+  test:
+    <<: *defaults
+    steps:
+        - attach_workspace:
+            at: .
+        - run:
+            name: Run tests
+            command: npm t
+  deploy:
+    executor: heroku/default
+    steps:
+        - attach_workspace:
+            at: .
+        - heroku/install
+        - heroku/deploy-via-git:
+            only-branch: master
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+        - prepare
+        - lint:
+            requires:
+                - prepare
+        - test:
+            requires:
+                - prepare
+        - build:
+            requires:
+                - prepare
+        - deploy:
+            requires:
+                - lint
+                - test
+                - build

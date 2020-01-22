@@ -1,3 +1,4 @@
+const fs = require('fs-extra');
 const webpack = require('webpack');
 const rimraf = require('rimraf');
 const chalk = require('chalk');
@@ -7,13 +8,19 @@ const serverConfig = require('../webpack/webpack.server');
 const { paths } = require('../settings');
 const { compilerPromise } = require('./utils');
 
+function copyPublicFolder() {
+  fs.copySync(paths.appPublic, paths.client.output, {
+    dereference: true,
+  });
+}
+
 async function build() {
   rimraf.sync(paths.client.output);
   rimraf.sync(paths.server.output);
 
   const clientCompiler = webpack(clientConfig);
   const serverCompiler = webpack(serverConfig);
-  
+
   const clientPromise = compilerPromise('client', clientCompiler);
   const serverPromise = compilerPromise('server', serverCompiler);
 
@@ -35,6 +42,7 @@ async function build() {
   try {
     await clientPromise;
     await serverPromise;
+    copyPublicFolder();
     console.info(chalk.blue('Done!'));
   } catch (err) {
     console.error(chalk.red('Webpack is failed: ', err));

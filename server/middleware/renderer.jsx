@@ -7,11 +7,7 @@ import { HTML } from '../components/html';
 import { APPLICATION_TITLE } from '../../config/env';
 import { getInlinedJavaScript, getJavaScript } from './utils';
 
-const helmetContext = {
-  helmet: {
-    title: APPLICATION_TITLE
-  }
-};
+const helmetContext = {};
 
 export default function renderer(entrypoints = []) {
   // const inlineScripts = getInlinedJavaScript(manifest);
@@ -21,16 +17,16 @@ export default function renderer(entrypoints = []) {
     const content = renderToString(
       <HelmetProvider context={helmetContext}>
         <App />
-      </HelmetProvider>
+      </HelmetProvider>,
     );
 
-    return res.send('<!DOCTYPE html>' + renderToString(
-      <HTML
-        scripts={scripts}
-        helmetContext={helmetContext}
-      >
-        {content}
-      </HTML>
-    ));
+    return res.send(
+      '<!DOCTYPE html>' +
+        renderToString(
+          <HTML title={APPLICATION_TITLE} scripts={scripts} helmetContext={helmetContext}>
+            {content}
+          </HTML>,
+        ),
+    );
   };
 }
