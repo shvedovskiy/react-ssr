@@ -9,7 +9,7 @@ const { paths } = require('../settings');
 const { compilerPromise } = require('./utils');
 
 function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.client.output, {
+  fs.copySync(paths.publicSrc, paths.client.output, {
     dereference: true,
   });
 }
@@ -42,13 +42,12 @@ async function build() {
   try {
     await clientPromise;
     await serverPromise;
-    copyPublicFolder();
-    console.info(chalk.blue('Done!'));
   } catch (err) {
-    console.error(chalk.red('Webpack is failed: ', err));
-  } finally {
-    process.exit(0);
+    throw new Error('Webpack is failed: ', err);
   }
+  copyPublicFolder();
+  console.info(chalk.blue('Done!'));
+  process.exit(0);
 }
 
 build();

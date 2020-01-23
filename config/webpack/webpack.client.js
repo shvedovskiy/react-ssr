@@ -7,7 +7,8 @@ const safePostCssParser = require('postcss-safe-parser');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { commonConfig } = require('./webpack.common');
-const { isDev, paths } = require('../settings');
+const { isDev, paths, files } = require('../settings');
+const { clientLoaders } = require('./loaders');
 
 module.exports = merge(commonConfig('client'), {
   entry: {
@@ -18,6 +19,9 @@ module.exports = merge(commonConfig('client'), {
     chunkFilename: isDev
       ? 'static/js/[name].chunk.js'
       : 'static/js/[name].[contenthash:8].chunk.js',
+  },
+  module: {
+    rules: clientLoaders,
   },
   resolve: {
     alias: isDev
@@ -96,7 +100,7 @@ module.exports = merge(commonConfig('client'), {
   },
   plugins: [
     new ManifestPlugin({
-      fileName: 'asset-manifest.json',
+      fileName: files.manifestFile,
       publicPath: paths.publicPath,
       generate: (seed, files, entrypoints) => {
         const manifestFiles = files.reduce((manifest, file) => {

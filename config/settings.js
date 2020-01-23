@@ -8,8 +8,17 @@ const isDev = NODE_ENV === 'development';
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (...relativePaths) => path.resolve(appDirectory, ...relativePaths);
 
+const manifestFile = 'asset-manifest.json';
+
 module.exports = {
   isDev,
+  files: {
+    client: {},
+    server: {
+      outputFile: isDev ? 'renderer.js' : 'index.js',
+    },
+    manifestFile,
+  },
   paths: {
     client: {
       src: resolveApp('src'),
@@ -17,12 +26,13 @@ module.exports = {
     },
     server: {
       src: isDev ? resolveApp('server', 'middleware', 'renderer.jsx') : resolveApp('server'),
-      output: resolveApp('server', 'bin', 'www'),
-      outputFileName: isDev ? 'renderer.js' : 'server.js',
+      output: isDev
+        ? resolveApp('server', 'bin', 'middleware')
+        : resolveApp('server', 'bin', 'www'),
     },
-    appPublic: resolveApp('src', 'public'),
+    publicSrc: resolveApp('src', 'public'),
     appDirectory,
     publicPath: '/',
-    manifestPath: resolveApp(path.join('server', 'public', 'asset-manifest.json')),
+    manifestPath: resolveApp('server', 'public', manifestFile),
   },
 };

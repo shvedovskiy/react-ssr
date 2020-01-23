@@ -2,7 +2,8 @@ const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 
 const { commonConfig } = require('./webpack.common');
-const { paths } = require('../settings');
+const { paths, files } = require('../settings');
+const { serverLoaders } = require('./loaders');
 
 module.exports = merge(commonConfig('server'), {
   target: 'node',
@@ -10,25 +11,12 @@ module.exports = merge(commonConfig('server'), {
     server: paths.server.src,
   },
   output: {
-    filename: paths.server.outputFileName,
+    filename: files.server.outputFile,
     library: 'app',
     libraryTarget: 'commonjs2',
   },
   module: {
-    rules: [
-      {
-        test: /\.scss$/,
-        loader: 'css-loader/locals',
-      },
-      {
-        test: /\.(ttf|eot|otf|svg|png)$/,
-        loader: 'file-loader?emitFile=false',
-      },
-      {
-        test: /\.(woff|woff2)$/,
-        loader: 'url-loader?emitFile=false',
-      },
-    ],
+    rules: serverLoaders,
   },
   optimization: {
     minimize: false,

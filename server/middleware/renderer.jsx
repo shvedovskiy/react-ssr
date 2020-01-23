@@ -1,3 +1,4 @@
+import fs from 'fs';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
@@ -9,8 +10,8 @@ import { getInlinedJavaScript, getJavaScript } from './utils';
 
 const helmetContext = {};
 
-export default function renderer(entrypoints = []) {
-  // const inlineScripts = getInlinedJavaScript(manifest);
+export default function renderer(entrypoints = [], fileSystem = fs) {
+  const inlineScripts = getInlinedJavaScript(entrypoints, fileSystem);
   const scripts = getJavaScript(entrypoints);
 
   return (req, res) => {
@@ -23,7 +24,12 @@ export default function renderer(entrypoints = []) {
     return res.send(
       '<!DOCTYPE html>' +
         renderToString(
-          <HTML title={APPLICATION_TITLE} scripts={scripts} helmetContext={helmetContext}>
+          <HTML
+            title={APPLICATION_TITLE}
+            inlineScripts={inlineScripts}
+            scripts={scripts}
+            helmetContext={helmetContext}
+          >
             {content}
           </HTML>,
         ),

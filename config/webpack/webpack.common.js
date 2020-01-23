@@ -23,26 +23,11 @@ module.exports.commonConfig = function(platform) {
     },
     module: {
       strictExportPresence: true,
-      rules: [
-        { parser: { requireEnsure: false } },
-        {
-          test: /\.jsx?/i,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              envName: platform,
-              cacheDirectory: true,
-              cacheCompression: !isDev,
-              compact: !isDev,
-            },
-          },
-        },
-      ],
+      rules: [{ parser: { requireEnsure: false } }],
     },
     resolve: {
       modules: [paths.client.src, paths.server.src, 'node_modules'],
-      extensions: ['.js', '.jsx', '.json'],
+      extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     },
     plugins: [
       new webpack.DefinePlugin({

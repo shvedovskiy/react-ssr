@@ -28,13 +28,9 @@ app.use(express.static(paths.client.output));
 //   }
 // }));
 
-app.get('/favicon.ico', (req, res) => {
-  res.redirect('https://yandex.st/lego/_/pDu9OWAQKB0s2J9IojKpiS_Eho.ico');
-});
-
 let manifest;
 try {
-  manifest = JSON.parse(fs.readFileSync(paths.manifestPath, { encoding: 'utf8' }));
+  manifest = JSON.parse(fs.readFileSync(paths.manifestPath, 'utf8'));
 } catch (err) {
   throw new Error('Asset Manifest could not be loaded: ', err);
 }

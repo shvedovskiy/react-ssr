@@ -9,14 +9,12 @@ const rimraf = require('rimraf');
 
 const clientConfig = require('../webpack/webpack.client');
 const serverConfig = require('../webpack/webpack.server');
-const { paths } = require('../settings');
+const { paths, files } = require('../settings');
 const { PORT } = require('../env');
 const { compilerPromise } = require('./utils');
 
 async function start() {
   rimraf.sync(paths.server.output);
-
-  const app = express();
 
   clientConfig.entry.main = [
     `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr&reload=true`,
@@ -35,11 +33,11 @@ async function start() {
     stats: clientConfig.stats,
   };
 
+  const app = express();
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     return next();
   });
-
   app.use(
     webpackDevMiddleware(clientCompiler, {
       index: false,
@@ -50,7 +48,7 @@ async function start() {
     }),
   );
   app.use(webpackHotMiddleware(clientCompiler));
-  app.use(express.static(paths.appPublic));
+  app.use(express.static(paths.publicSrc));
 
   const serverWatch = serverCompiler.watch(watchOptions, (err, stats) => {
     if (!err && !stats.hasErrors()) {
@@ -71,14 +69,13 @@ async function start() {
   } catch (err) {
     console.error(chalk.red('Webpack is failed: ', err));
   }
-  const rendererPath = path.join(paths.server.output, paths.server.outputFileName);
+  const rendererPath = path.join(paths.server.output, files.server.outputFile);
   const watcher = chokidar.watch(rendererPath);
 
   watcher.on('ready', () => {
     watcher.on('all', () => {
       Object.keys(require.cache).forEach(id => {
-        if (id.endsWith(paths.server.outputFileName)) {
-          console.log('alo');
+        if (id.endsWith(files.server.outputFile)) {
           delete require.cache[id];
         }
       });
@@ -91,20 +88,19 @@ async function start() {
       (res, key) => res.concat(statsEntrypoints[key].assets),
       [],
     );
-
-    return require(rendererPath).default(entrypoints)(req, res, next);
+    return require(rendererPath).default(entrypoints, res.locals.fs)(req, res, next);
   });
 
-  app.listen(PORT, err => {
+  const server = app.listen(PORT, err => {
     if (err) {
-      console.error(chalk.red('Server is not started: ', err));
-    } else {
-      console.info(chalk.blue(`Server running at http://localhost:${PORT}`));
+      throw new Error('Server is not started');
     }
+    console.info(chalk.blue(`Server running at http://localhost:${PORT}`));
   });
 
   ['SIGINT', 'SIGTERM'].forEach(sig => {
     process.on(sig, () => {
+      server.close();
       serverWatch.close();
       process.exit();
     });

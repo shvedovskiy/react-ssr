@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'react-ssr',
-      script: 'server/bin/www/server.js',
+      script: 'server/bin/www/index.js',
       node_args: '--optimize_for_size --max_old_space_size=460 --gc_interval=100',
       instances: 'max',
       exec_mod: 'cluster',
