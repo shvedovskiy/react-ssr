@@ -26,7 +26,7 @@ module.exports.commonConfig = function(platform) {
       rules: [{ parser: { requireEnsure: false } }],
     },
     resolve: {
-      modules: [paths.client.src, paths.server.src, 'node_modules'],
+      modules: [paths.client.src, paths.server.src, paths.appDirectory, 'node_modules'],
       extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     },
     plugins: [

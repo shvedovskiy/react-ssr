@@ -67,7 +67,7 @@ async function start() {
     await clientPromise;
     await serverPromise;
   } catch (err) {
-    console.error(chalk.red('Webpack is failed: ', err));
+    throw new Error('Webpack is failed: ' + err);
   }
   const rendererPath = path.join(paths.server.output, files.server.outputFile);
   const watcher = chokidar.watch(rendererPath);

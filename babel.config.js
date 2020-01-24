@@ -7,7 +7,7 @@ module.exports = {
           {
             useBuiltIns: 'usage',
             modules: false,
-            corejs: 3,
+            corejs: '3.6',
             shippedProposals: true,
           },
         ],
@@ -22,7 +22,7 @@ module.exports = {
           {
             useBuiltIns: 'usage',
             modules: false,
-            corejs: 3,
+            corejs: '3.6',
             shippedProposals: true,
             targets: {
               node: 12,

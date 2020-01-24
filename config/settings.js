@@ -15,7 +15,7 @@ module.exports = {
   files: {
     client: {},
     server: {
-      outputFile: isDev ? 'renderer.js' : 'index.js',
+      outputFile: isDev ? 'render.js' : 'index.js',
     },
     manifestFile,
   },
@@ -25,7 +25,7 @@ module.exports = {
       output: resolveApp('server', 'public'),
     },
     server: {
-      src: isDev ? resolveApp('server', 'middleware', 'renderer.jsx') : resolveApp('server'),
+      src: isDev ? resolveApp('server', 'middleware', 'render.js') : resolveApp('server'),
       output: isDev
         ? resolveApp('server', 'bin', 'middleware')
         : resolveApp('server', 'bin', 'www'),

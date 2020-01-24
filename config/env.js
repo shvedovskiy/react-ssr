@@ -18,6 +18,7 @@ const {
   HOST = 'localhost',
   PORT,
   APPLICATION_TITLE = 'React SSR',
+  API_PATH = '/api/router-data',
 } = process.env;
 
 module.exports = {
@@ -26,4 +27,5 @@ module.exports = {
   HOST,
   PORT: !Number.isNaN(Number.parseInt(PORT)) ? Number.parseInt(PORT) : 3000,
   APPLICATION_TITLE,
+  API_PATH,
 };
