@@ -27,15 +27,23 @@ async function build() {
   clientCompiler.watch({}, (error, stats) => {
     if (!error && !stats.hasErrors()) {
       console.log(stats.toString(clientConfig.stats));
-    } else {
+    } else if (error) {
+      console.error(chalk.red(error));
+      process.exit(1);
+    } else if (stats.hasErrors()) {
       console.error(chalk.red(stats.compilation.errors));
+      process.exit(1);
     }
   });
   serverCompiler.watch({}, (error, stats) => {
     if (!error && !stats.hasErrors()) {
       console.log(stats.toString(serverConfig.stats));
-    } else {
+    } else if (error) {
+      console.error(chalk.red(error));
+      process.exit(1);
+    } else if (stats.hasErrors()) {
       console.error(chalk.red(stats.compilation.errors));
+      process.exit(1);
     }
   });
 

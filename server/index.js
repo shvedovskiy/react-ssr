@@ -9,7 +9,7 @@ import favicon from 'serve-favicon';
 
 import { HTTPS, HOST, PORT } from '../config/env';
 import { paths } from '../config/settings';
-import renderer from './middleware/renderer';
+import render from './middleware/render';
 import errorHandler from './middleware/error-handler';
 
 const serverURL = `http${HTTPS ? 's' : ''}://${HOST}:${PORT || ''}`;
@@ -35,7 +35,7 @@ try {
   throw new Error('Asset Manifest could not be loaded: ', err);
 }
 
-app.use(renderer(manifest.entrypoints));
+app.use(render(manifest.entrypoints));
 app.use(errorHandler);
 app.set('port', PORT);
 

@@ -29,6 +29,9 @@ module.exports.commonConfig = function(platform) {
       modules: [paths.client.src, paths.server.src, paths.appDirectory, 'node_modules'],
       extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     },
+    optimization: {
+      minimize: false,
+    },
     plugins: [
       new webpack.DefinePlugin({
         IS_SERVER: JSON.stringify(isServer),
