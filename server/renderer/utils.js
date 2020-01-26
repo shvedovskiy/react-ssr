@@ -1,7 +1,7 @@
 import path from 'path';
 import sourceMappingURL from 'source-map-url';
 
-import { paths } from '../../config/settings';
+import { paths } from 'config/settings';
 
 const RUNTIME_JS = new RegExp(/runtime-.+[.]js$/);
 

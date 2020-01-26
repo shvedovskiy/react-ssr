@@ -9,11 +9,17 @@ const rimraf = require('rimraf');
 
 const clientConfig = require('../webpack/webpack.client');
 const serverConfig = require('../webpack/webpack.server');
-const { paths, files } = require('../settings');
-const { PORT } = require('../env');
+const { paths, files, env } = require('../settings');
 const { compilerPromise } = require('./utils');
 
 async function start() {
+  let { PORT } = env;
+  if (!PORT || Number.isNaN(Number.parseInt(PORT))) {
+    PORT = 3000;
+  } else {
+    PORT = Number.parseInt(PORT);
+  }
+
   rimraf.sync(paths.server.output);
 
   clientConfig.entry.main = [

@@ -8,24 +8,25 @@
 // };
 // config(dotenvOptions);
 
-// require('dotenv-flow').config({
-//   silent: true
-// });
+require('dotenv-flow').config({
+  silent: true,
+});
 
-const {
-  NODE_ENV = 'production',
-  HTTPS,
-  HOST = 'localhost',
-  PORT,
-  APPLICATION_TITLE = 'React SSR',
-  API_PATH = '/api/router-data',
-} = process.env;
+const raw = Object.keys(process.env).reduce(
+  (env, key) => {
+    env[key] = process.env[key];
+    return env;
+  },
+  {
+    NODE_ENV: process.env.NODE_ENV || 'production',
+  },
+);
 
-module.exports = {
-  NODE_ENV,
-  HTTPS: Boolean(HTTPS),
-  HOST,
-  PORT: !Number.isNaN(Number.parseInt(PORT)) ? Number.parseInt(PORT) : 3000,
-  APPLICATION_TITLE,
-  API_PATH,
+const stringified = {
+  'process.env': Object.keys(raw).reduce((env, key) => {
+    env[key] = JSON.stringify(raw[key]);
+    return env;
+  }, {}),
 };
+
+module.exports = { raw, stringified };

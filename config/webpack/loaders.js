@@ -5,7 +5,7 @@ const postcssNormalize = require('postcss-normalize');
 const { isDev } = require('../settings.js');
 
 const babelLoaderClient = {
-  test: /\.jsx?/i,
+  test: /\.(js|jsx|ts|tsx)/i,
   exclude: /node_modules/,
   use: {
     loader: require.resolve('babel-loader'),

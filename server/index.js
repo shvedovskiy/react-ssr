@@ -7,12 +7,21 @@ import chalk from 'chalk';
 import favicon from 'serve-favicon';
 // import expressStaticGzip from 'express-static-gzip';
 
-import { HTTPS, HOST, PORT } from '../config/env';
 import { paths } from '../config/settings';
 import render from './middleware/render';
 import errorHandler from './middleware/error-handler';
 
-const serverURL = `http${HTTPS ? 's' : ''}://${HOST}:${PORT || ''}`;
+const { HTTPS = false, HOST = 'localhost' } = process.env;
+let PORT = process.env.PORT;
+if (!PORT) {
+  PORT = '';
+} else {
+  PORT = Number.parseInt(PORT);
+  if (Number.isNaN(PORT)) {
+    PORT = 3000;
+  }
+}
+const serverURL = `http${HTTPS ? 's' : ''}://${HOST}:${PORT}`;
 const app = express();
 
 app.use(cors(/*{ origin: FRONTEND_URL, credentials: true }*/));

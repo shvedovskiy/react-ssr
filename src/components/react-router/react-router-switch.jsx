@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, withRouter } from 'react-router-dom';
 
-import { API_PATH } from 'config/env';
-
 class ReactRouterSwitchInternal extends Component {
   constructor(...args) {
     super(...args);
@@ -24,7 +22,9 @@ class ReactRouterSwitchInternal extends Component {
 
   async fetchData() {
     const result = await fetch(
-      `${API_PATH}?url=${encodeURIComponent(window.location.pathname)}`,
+      `${process.env.API_PATH || '/api/data'}?url=${encodeURIComponent(
+        window.location.pathname,
+      )}`,
     );
     const data = await result.json();
 

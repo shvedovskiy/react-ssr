@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
-const { NODE_ENV } = require('../env');
+const { stringified } = require('../env');
 const settings = require('../settings');
+const modules = require('../modules');
 
 const { isDev, paths } = settings;
 
@@ -26,17 +27,17 @@ module.exports.commonConfig = function(platform) {
       rules: [{ parser: { requireEnsure: false } }],
     },
     resolve: {
-      modules: [paths.client.src, paths.server.src, paths.appDirectory, 'node_modules'],
-      extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
-    },
-    optimization: {
-      minimize: false,
+      modules: ['node_modules', paths.nodeModules].concat(modules.additionalModulePaths || []),
+      extensions: settings.moduleFileExtensions,
+      alias: {
+        ...(modules.webpackAliases || {}),
+      },
     },
     plugins: [
       new webpack.DefinePlugin({
         IS_SERVER: JSON.stringify(isServer),
         'typeof window': JSON.stringify(isServer ? 'undefined' : 'object'),
-        'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+        ...stringified,
       }),
       ...(isDev
         ? [

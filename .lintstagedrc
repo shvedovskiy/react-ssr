@@ -1,17 +1,14 @@
 {
-  "{src,server}/**/*.{js,jsx,ts,tsx}": [
+  "*.{js,jsx,ts,tsx,css,scss,html}": [
+    "prettier --write",
+    "git add"
+  ],
+  "*.{js,jsx,ts,tsx}": [
     "eslint --fix",
-    "prettier --write",
     "git add"
   ],
-  "src/**/*.css": [
-    "prettier --write",
-    "stylelint",
-    "git add"
-  ],
-  "public/**/*.html": [
-    "prettier --write",
-    "stylelint",
+  "*.{css,scss,html}": [
+    "stylelint --fix",
     "git add"
   ]
 }

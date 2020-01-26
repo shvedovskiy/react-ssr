@@ -1,6 +1,6 @@
 import { matchPath } from 'react-router-dom';
 
-import { routesConfig } from 'routes-config';
+import { routesConfig } from 'src/routes-config';
 
 const DATA_SOURCES = {
   data(route) {

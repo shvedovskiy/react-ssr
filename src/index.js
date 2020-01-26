@@ -4,8 +4,12 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import { App } from 'components/app/app';
-import { store } from 'store/configure-store';
+import { App } from './components/app/app';
+import { configureStore } from './store/configure-store';
+
+const preloadedState = JSON.parse(window.__PRELOADED_STATE__);
+delete window.__PRELOADED_STATE__;
+const store = configureStore(preloadedState);
 
 hydrate(
   <Provider store={store}>

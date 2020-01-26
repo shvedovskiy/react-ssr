@@ -1,9 +1,5 @@
 import { createStore } from 'redux';
 
-const preloadedState = JSON.parse(window.__PRELOADED_STATE__);
-
-delete window.__PRELOADED_STATE__;
-
 function reducer(state, action) {
   switch (action.type) {
     case 'UPDATE_STORE':
@@ -13,4 +9,6 @@ function reducer(state, action) {
   }
 }
 
-export const store = createStore(reducer, preloadedState);
+export function configureStore(preloadedState) {
+  return createStore(reducer, preloadedState);
+}

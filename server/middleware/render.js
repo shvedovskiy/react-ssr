@@ -2,24 +2,13 @@ import { Router } from 'express';
 
 import { loadData } from '../api/load-data';
 import { createRenderer } from '../renderer';
-import { API_PATH } from 'config/env';
+import addStore from './add-store';
 
-export default function renderer(entrypoints, fs) {
+export default function renderMiddleware(entrypoints, fs) {
   const renderHTML = createRenderer(entrypoints, fs);
 
-  function rendererMiddleware(req, res) {
-    renderHTML(req, res)
-      .then(content => res.send(content))
-      .catch(err => {
-        res.starus(500).json({
-          message: err.message,
-          stack: err.stack,
-        });
-      });
-  }
-
   const router = new Router();
-  router.get(API_PATH, async (req, res) => {
+  router.get(process.env.API_PATH || '/api/data', async (req, res) => {
     try {
       res.json(await loadData(req.query.url));
     } catch (err) {
@@ -29,6 +18,8 @@ export default function renderer(entrypoints, fs) {
       });
     }
   });
-  router.get('/*', rendererMiddleware);
+  router.use(addStore);
+  router.get('/*', renderHTML);
+
   return router;
 }

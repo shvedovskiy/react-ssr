@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
-const { NODE_ENV } = require('./env');
+const { raw: env } = require('./env');
 
-const isDev = NODE_ENV === 'development';
+const isDev = env.NODE_ENV === 'development';
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (...relativePaths) => path.resolve(appDirectory, ...relativePaths);
@@ -34,5 +34,9 @@ module.exports = {
     appDirectory,
     publicPath: '/',
     manifestPath: resolveApp('server', 'public', manifestFile),
+    tsConfigPath: resolveApp('tsconfig.json'),
+    nodeModules: resolveApp('node_modules'),
   },
+  moduleFileExtensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+  env,
 };
