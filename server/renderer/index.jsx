@@ -9,14 +9,21 @@ import { App } from 'src/components/app/app';
 import { env } from 'config/settings';
 import { HTML } from '../templates/html';
 import { getInlinedJavaScript, getJavaScript } from './utils';
+import { loadData } from '../api/load-data';
 
 export function createRenderer(entrypoints = [], fileSystem = fs) {
   const inlineScripts = getInlinedJavaScript(entrypoints, fileSystem);
   const scripts = getJavaScript(entrypoints);
 
-  return (req, res) => {
+  return async (req, res) => {
     const context = {};
     const helmetContext = {};
+
+    const location = {
+      pathname: req.path,
+      query: req.query,
+    };
+    await loadData(res.locals.store.dispatch, location);
 
     const content = renderToString(
       <Provider store={res.locals.store}>

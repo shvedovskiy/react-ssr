@@ -28,10 +28,11 @@ async function build() {
     if (!error && !stats.hasErrors()) {
       console.log(stats.toString(clientConfig.stats));
     } else if (error) {
+      console.log('alo');
       console.error(chalk.red(error));
       process.exit(1);
     } else if (stats.hasErrors()) {
-      console.error(chalk.red(stats.compilation.errors));
+      console.error(chalk.red(stats.compilation.errors.map(e => `${e.file} (${e.location.line},${e.location.character}): ${e.rawMessage}`).join('\n')));
       process.exit(1);
     }
   });
@@ -42,7 +43,7 @@ async function build() {
       console.error(chalk.red(error));
       process.exit(1);
     } else if (stats.hasErrors()) {
-      console.error(chalk.red(stats.compilation.errors));
+      console.error(chalk.red(stats.compilation.errors.map(e => `${e.file} (${e.location.line},${e.location.character}): ${e.rawMessage}`).join('\n')));
       process.exit(1);
     }
   });

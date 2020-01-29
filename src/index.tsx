@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { App } from './components/app/app';
-import { configureStore } from './store/configure-store';
+import { configureStore } from './store';
 // import * as serviceWorker from './service-worker';
 
 const preloadedState = JSON.parse(window.__PRELOADED_STATE__);

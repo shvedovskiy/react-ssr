@@ -64,3 +64,4 @@ declare module '*.module.sass' {
 }
 
 declare const IS_SERVER: boolean;
+declare const __PRELOADED_STATE__: string;

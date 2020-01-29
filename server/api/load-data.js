@@ -1,23 +1,43 @@
-import { matchPath } from 'react-router-dom';
+import { matchRoutes } from 'react-router-config';
 
-import { routesConfig } from 'src/routes-config';
+import { fetchRoutes } from './routes';
 
-const DATA_SOURCES = {
-  data(route) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ user: 'Test' });
-      }, 30);
-    });
-  },
-};
+// const DATA_SOURCES = {
+//   data(route) {
+//     return new Promise(resolve => {
+//       setTimeout(() => {
+//         resolve({ user: 'Test' });
+//       }, 30);
+//     });
+//   },
+// };
 
-export function loadData(url) {
-  let route;
-  const routeConfig = routesConfig.find(({ path }) => (route = matchPath(url, path)));
+// export function loadData(req) {
+//   const matchingRoutes = matchRoutes(routes, req.url);
 
-  if (route && DATA_SOURCES[routeConfig.key]) {
-    return DATA_SOURCES[routeConfig.key](route);
+//   const promises = matchingRoutes.map(({ route, match }) => {
+//     return route.loadData ? route.loadData(match) : Promise.resolve(null);
+//   });
+//   return Promise.all(promises);
+// }
+
+export async function loadData(dispatch, location, prevLocation = null) {
+  const branch = matchRoutes(fetchRoutes, location.pathname);
+  // [
+  //   {
+  //     route: { path: '/', exact: false, fetch: [(Function: fetchGlobalAppData)] },
+  //     match: { path: '/', url: '/', isExact: true, params: {} },
+  //   },
+  // ];
+  for (const { route, match } of branch) {
+    await dispatch(
+      route.fetch(
+        {
+          ...location,
+          params: match.params,
+        },
+        prevLocation,
+      ),
+    );
   }
-  return {};
 }

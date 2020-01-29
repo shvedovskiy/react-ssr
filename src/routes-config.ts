@@ -1,24 +1,18 @@
-import { DynamicCounter } from 'src/components/dynamic-counter/dynamic-counter';
-import { Data } from 'src/components/data/data';
-import { StaticHelloWorld } from 'src/components/static-hello-world/static-hello-world';
+import { Home } from 'src/components/home/home';
+import { Data } from 'src/features/data/components/data';
 import { NotFound } from 'src/components/not-found/not-found';
 
-export const routesConfig = [
+export const routes = [
   {
-    key: 'counter',
-    path: '/counter',
-    component: DynamicCounter,
+    key: 'home',
+    path: '/',
+    exact: true,
+    component: Home,
   },
   {
     key: 'data',
     path: '/data',
     component: Data,
-  },
-  {
-    key: 'home',
-    path: '/',
-    exact: true,
-    component: StaticHelloWorld,
   },
   {
     key: 'not-found',
