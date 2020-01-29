@@ -117,16 +117,15 @@ module.exports = merge(commonConfig('client'), {
         };
       },
     }),
-    ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
-    ...(!isDev
-      ? [
+    ...(isDev
+      ? [new webpack.HotModuleReplacementPlugin()]
+      : [
           new MiniCssExtractPlugin({
             filename: 'static/css/[name].[contenthash:8].css',
             chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
           }),
-        ]
-      : []),
-  ],
+        ]),
+  ].filter(Boolean),
   node: {
     module: 'empty',
     dgram: 'empty',

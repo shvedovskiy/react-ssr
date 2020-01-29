@@ -1,5 +1,8 @@
+const resolve = require('resolve');
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
 const { stringified } = require('../env');
 const settings = require('../settings');
@@ -39,15 +42,30 @@ module.exports.commonConfig = function(platform) {
         'typeof window': JSON.stringify(isServer ? 'undefined' : 'object'),
         ...stringified,
       }),
-      ...(isDev
-        ? [
-            // Watcher doesn't work well if you mistype casing in a path so we use
-            // a plugin that prints an error when you attempt to do this.
-            // See https://github.com/facebook/create-react-app/issues/240
-            new CaseSensitivePathsPlugin(),
-          ]
-        : []),
-    ],
+      // Watcher doesn't work well if you mistype casing in a path so we use
+      // a plugin that prints an error when you attempt to do this.
+      // See https://github.com/facebook/create-react-app/issues/240
+      isDev && new CaseSensitivePathsPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: resolve.sync('typescript', {
+          basedir: paths.appNodeModules,
+        }),
+        async: isDev,
+        useTypescriptIncrementalApi: true,
+        checkSyntacticErrors: true,
+        tsconfig: paths.appTsConfig,
+        reportFiles: [
+          '**',
+          '!**/__tests__/**',
+          '!**/?(*.)(spec|test).*',
+          '!**/src/setupProxy.*',
+          '!**/src/setupTests.*',
+        ],
+        silent: true,
+        // The formatter is invoked directly in WebpackDevServerUtils during development
+        formatter: !isDev ? typescriptFormatter : undefined,
+      }),
+    ].filter(Boolean),
     performance: {
       hints: isDev ? false : 'warning',
     },

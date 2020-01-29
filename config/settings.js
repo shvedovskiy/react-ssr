@@ -32,6 +32,8 @@ module.exports = {
     },
     publicSrc: resolveApp('src', 'public'),
     appDirectory,
+    appNodeModules: resolveApp('node_modules'),
+    appTsConfig: resolveApp('tsconfig.json'),
     publicPath: '/',
     manifestPath: resolveApp('server', 'public', manifestFile),
     tsConfigPath: resolveApp('tsconfig.json'),
