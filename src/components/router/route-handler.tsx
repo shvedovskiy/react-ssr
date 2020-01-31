@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import qs from 'query-string';
 
-import { loadData } from '../../../server/api/load-data';
+import { loadData } from '../../api/load-data';
 
 async function fetchOnLocationChange(
   dispatch: Dispatch,

@@ -1,14 +1,15 @@
 import path from 'path';
+import { Request, Response } from 'express';
 
-import { env } from 'config/settings';
+export default function errorHandler(err: Error, req: Request, res: Response) {
+  const { NODE_ENV = 'production' } = process.env;
 
-export default function errorHandler(err, req, res) {
   return res.status(404).json({
     status: 'error',
     message: err.message,
     stack:
-      env.NODE_ENV === 'development' &&
-      (err.stack || '')
+      NODE_ENV === 'development' &&
+      (err.stack ?? '')
         .split('\n')
         .map(line => line.trim())
         .map(line => line.split(path.sep).join('/'))

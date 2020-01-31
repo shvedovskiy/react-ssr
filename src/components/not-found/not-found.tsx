@@ -1,6 +1,12 @@
 import React from 'react';
+import { StaticRouterContext } from 'react-router';
 
-export const NotFound = ({ staticContext = {} }) => {
-  staticContext.status = 404;
+type Props = {
+  staticContext: StaticRouterContext;
+};
+
+export const NotFound = ({ staticContext = {} }: Props) => {
+  staticContext.statusCode = 404;
+
   return <h1>Not Found</h1>;
 };

@@ -12,11 +12,11 @@ import render from './middleware/render';
 import errorHandler from './middleware/error-handler';
 
 const { HTTPS = false, HOST = 'localhost' } = process.env;
-let PORT = process.env.PORT;
-if (!PORT) {
-  PORT = '';
+let PORT: number;
+if (!process.env.PORT) {
+  PORT = 80;
 } else {
-  PORT = Number.parseInt(PORT);
+  PORT = Number.parseInt(process.env.PORT);
   if (Number.isNaN(PORT)) {
     PORT = 3000;
   }
@@ -41,7 +41,7 @@ let manifest;
 try {
   manifest = JSON.parse(fs.readFileSync(paths.manifestPath, 'utf8'));
 } catch (err) {
-  throw new Error('Asset Manifest could not be loaded: ', err);
+  throw new Error(`Asset Manifest could not be loaded: ${err}`);
 }
 
 app.use(render(manifest.entrypoints));
@@ -50,7 +50,7 @@ app.set('port', PORT);
 
 const server = http.createServer(app);
 
-function onError(err) {
+function onError(err: any) {
   if (err.syscall !== 'listen') {
     throw err;
   }

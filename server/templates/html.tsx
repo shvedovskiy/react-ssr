@@ -1,5 +1,18 @@
 import React from 'react';
+import { HelmetData } from 'react-helmet';
 import jsesc from 'jsesc';
+
+import { RootState } from 'typesafe-actions';
+
+type Props = {
+  children: string;
+  title?: string;
+  css?: string[];
+  inlineScripts?: string[];
+  scripts?: string[];
+  state?: RootState | {};
+  helmet?: Partial<HelmetData>;
+};
 
 export const HTML = ({
   children,
@@ -8,18 +21,18 @@ export const HTML = ({
   inlineScripts = [],
   scripts = [],
   state = {},
-  helmetContext: { helmet },
-}) => (
+  helmet = {},
+}: Props) => (
   <html lang="ru-RU">
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>{title}</title>
-      {helmet.base.toComponent()}
-      {helmet.title.toComponent()}
-      {helmet.meta.toComponent()}
-      {helmet.link.toComponent()}
-      {helmet.script.toComponent()}
+      {helmet?.base?.toComponent()}
+      {helmet?.title?.toComponent()}
+      {helmet?.meta?.toComponent()}
+      {helmet?.link?.toComponent()}
+      {helmet?.script?.toComponent()}
       <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
       <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png" />

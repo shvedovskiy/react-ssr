@@ -63,5 +63,12 @@ declare module '*.module.sass' {
   export default classes;
 }
 
+interface Window {
+  __PRELOADED_STATE__: any;
+}
+
 declare const IS_SERVER: boolean;
-declare const __PRELOADED_STATE__: string;
+
+declare module 'source-map-url' {
+  export function removeFrom(fileContent: string): string;
+}

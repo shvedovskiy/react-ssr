@@ -1,23 +1,30 @@
-import fs from 'fs';
+import 'isomorphic-fetch';
+
+import { readFileSync } from 'fs';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
+import { HelmetData } from 'react-helmet';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
+import { StaticRouterContext } from 'react-router';
+import { Request, Response } from 'express';
 
 import { App } from 'src/components/app/app';
-import { env } from 'config/settings';
 import { HTML } from '../templates/html';
 import { getInlinedJavaScript, getJavaScript } from './utils';
-import { loadData } from '../api/load-data';
+import { loadData } from '../../src/api/load-data';
 
-export function createRenderer(entrypoints = [], fileSystem = fs) {
-  const inlineScripts = getInlinedJavaScript(entrypoints, fileSystem);
+export function createRenderer(
+  entrypoints: string[] = [],
+  readFile: typeof readFileSync = readFileSync,
+) {
+  const inlineScripts = getInlinedJavaScript(entrypoints, readFile);
   const scripts = getJavaScript(entrypoints);
 
-  return async (req, res) => {
-    const context = {};
-    const helmetContext = {};
+  return async (req: Request, res: Response) => {
+    const context: StaticRouterContext = {};
+    const helmetContext: { helmet?: HelmetData } = {};
 
     const location = {
       pathname: req.path,
@@ -39,7 +46,7 @@ export function createRenderer(entrypoints = [], fileSystem = fs) {
       return res.redirect(304, context.url);
     }
 
-    if (context.status === 404) {
+    if (context?.statusCode === 404) {
       return res.status(404);
     }
 
@@ -47,10 +54,10 @@ export function createRenderer(entrypoints = [], fileSystem = fs) {
       '<!DOCTYPE html>' +
         renderToString(
           <HTML
-            title={env.APPLICATION_TITLE || 'React SSR'}
+            title={process.env.APPLICATION_TITLE || 'React SSR'}
             inlineScripts={inlineScripts}
             scripts={scripts}
-            helmetContext={helmetContext}
+            helmet={helmetContext?.helmet}
             state={res.locals.store.getState()}
           >
             {content}
