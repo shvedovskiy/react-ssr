@@ -10,10 +10,10 @@ import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { Request, Response } from 'express';
 
-import { App } from 'src/components/app/app';
+import { App } from 'src/features/app/app';
 import { HTML } from '../templates/html';
 import { getInlinedJavaScript, getJavaScript } from './utils';
-import { loadData } from '../../src/api/load-data';
+import { loadData } from '../../src/common/api/load-data';
 
 export function createRenderer(
   entrypoints: string[] = [],

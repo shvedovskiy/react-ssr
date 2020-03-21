@@ -1,11 +1,11 @@
 import { createReducer } from 'typesafe-actions';
 
 import { DataState } from 'app-models';
-import { dataReady } from './actions';
+import * as actions from './actions';
 
 const initialState: DataState = {};
 
-export default createReducer(initialState).handleAction(
-  dataReady,
+export const reducer = createReducer(initialState).handleAction(
+  actions.dataReady,
   (state, action) => action.payload.data,
 );

@@ -1,6 +1,6 @@
-import { Home } from 'src/components/home/home';
+import { Home } from 'src/features/home/home';
 import { Data } from 'src/features/data/components/data';
-import { NotFound } from 'src/components/not-found/not-found';
+import { NotFound } from 'src/common/components/not-found/not-found';
 
 export const routes = [
   {
