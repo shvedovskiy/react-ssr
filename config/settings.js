@@ -25,7 +25,7 @@ module.exports = {
       output: resolveApp('server', 'public'),
     },
     server: {
-      src: isDev ? resolveApp('server', 'middleware', 'render.js') : resolveApp('server'),
+      src: isDev ? resolveApp('server', 'middleware', 'render.ts') : resolveApp('server'),
       output: isDev
         ? resolveApp('server', 'bin', 'middleware')
         : resolveApp('server', 'bin', 'www'),

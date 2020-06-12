@@ -94,7 +94,11 @@ async function start() {
       (res, key) => res.concat(statsEntrypoints[key].assets),
       [],
     );
-    return require(rendererPath).default(entrypoints, res.locals.fs)(req, res, next);
+    return require(rendererPath).default(entrypoints, res.locals.fs.readFileSync)(
+      req,
+      res,
+      next,
+    );
   });
 
   const server = app.listen(PORT, err => {

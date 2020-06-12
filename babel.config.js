@@ -24,6 +24,7 @@ module.exports = {
       {
         useBuiltIns: 'usage',
         corejs: '3.6',
+        loose: true,
         shippedProposals: true,
         modules: false,
         exclude: ['transform-typeof-symbol'],

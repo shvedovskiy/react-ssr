@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import dataReducer from 'src/features/data/reducer';
+import { reducer as dataReducer } from 'src/features/data/reducer';
 
 const rootReducer = combineReducers({
   data: dataReducer,

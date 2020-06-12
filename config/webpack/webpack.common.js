@@ -10,7 +10,7 @@ const modules = require('../modules');
 
 const { isDev, paths } = settings;
 
-module.exports.commonConfig = function(platform) {
+module.exports.commonConfig = function (platform) {
   const isServer = platform === 'server';
 
   return {
