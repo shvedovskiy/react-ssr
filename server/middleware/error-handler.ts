@@ -13,14 +13,6 @@ export default function errorHandler(err: Error, req: Request, res: Response) {
         .split('\n')
         .map(line => line.trim())
         .map(line => line.split(path.sep).join('/'))
-        .map(line =>
-          line.replace(
-            process
-              .cwd()
-              .split(path.sep)
-              .join('/'),
-            '.',
-          ),
-        ),
+        .map(line => line.replace(process.cwd().split(path.sep).join('/'), '.')),
   });
 }

@@ -10,6 +10,18 @@ const modules = require('../modules');
 
 const { isDev, paths } = settings;
 
+const stats = {
+  assetsSort: '!size',
+  builtAt: false,
+  cached: false,
+  cachedAssets: false,
+  colors: true,
+  hash: false,
+  modules: false,
+  reasons: false,
+  version: false,
+};
+
 module.exports.commonConfig = function (platform) {
   const isServer = platform === 'server';
 
@@ -69,16 +81,14 @@ module.exports.commonConfig = function (platform) {
     performance: {
       hints: isDev ? false : 'warning',
     },
-    stats: {
-      assetsSort: '!size',
-      builtAt: false,
-      cached: false,
-      cachedAssets: false,
-      colors: true,
-      hash: false,
-      modules: false,
-      reasons: false,
-      version: false,
+    stats,
+    devServer: {
+      watchOptions: {
+        ignored: /node_modules/,
+        stats,
+      },
+      stats,
+      publicPath: paths.publicPath,
     },
   };
 };

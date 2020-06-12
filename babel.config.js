@@ -129,9 +129,10 @@ module.exports = {
           require('@babel/preset-env').default,
           {
             useBuiltIns: 'usage',
-            modules: false,
             corejs: '3.6',
+            loose: true,
             shippedProposals: true,
+            modules: false,
             targets: {
               node: 12,
             },

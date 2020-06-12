@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const express = require('express');
 const chokidar = require('chokidar');
-const webpackDevMiddleware = require('webpack-dev-middleware');
+const { default: webpackDevMiddleware } = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const chalk = require('chalk');
 const rimraf = require('rimraf');
@@ -47,9 +47,6 @@ async function start() {
   app.use(
     webpackDevMiddleware(clientCompiler, {
       index: false,
-      publicPath: paths.publicPath,
-      stats: clientConfig.stats,
-      watchOptions,
       serverSideRender: true,
     }),
   );
@@ -89,16 +86,15 @@ async function start() {
   });
 
   app.use((req, res, next) => {
-    const statsEntrypoints = res.locals.webpackStats.toJson().entrypoints;
+    const statsEntrypoints = res.locals.webpack.devMiddleware.stats.toJson().entrypoints;
     const entrypoints = Object.keys(statsEntrypoints).reduce(
       (res, key) => res.concat(statsEntrypoints[key].assets),
       [],
     );
-    return require(rendererPath).default(entrypoints, res.locals.fs.readFileSync)(
-      req,
-      res,
-      next,
-    );
+    return require(rendererPath).default(
+      entrypoints,
+      res.locals.webpack.devMiddleware.outputFileSystem.readFileSync,
+    )(req, res, next);
   });
 
   const server = app.listen(PORT, err => {
