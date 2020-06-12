@@ -1,10 +1,5 @@
 {
-  "extends": [
-  	"stylelint-config-standard",
-  	"stylelint-config-recommended-scss",
-  	"stylelint-config-rational-order",
-  	"stylelint-prettier/recommended"
-  ],
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended-scss", "stylelint-config-rational-order", "stylelint-prettier/recommended"],
   "plugins": ["stylelint-order", "stylelint-no-unsupported-browser-features"],
   "rules": {
     "at-rule-no-unknown": null,
@@ -28,7 +23,12 @@
     ],
     "media-feature-name-no-vendor-prefix": true,
     "no-descending-specificity": null,
-    "plugin/no-unsupported-browser-features": true,
+    "plugin/no-unsupported-browser-features": [
+      true,
+      {
+        "ignore": ["text-size-adjust", "css-appearance"]
+      }
+    ],
     "scss/at-function-named-arguments": "never",
     "scss/at-function-parentheses-space-before": "never",
     "scss/at-import-no-partial-leading-underscore": true,

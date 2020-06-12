@@ -4,7 +4,9 @@ import { createAction } from 'typesafe-actions';
 import { DataState } from 'app-models';
 import { FetchingRoute } from 'src/common/api/types';
 
-export const dataReady = createAction('data/DATA_READY', (data: DataState = {}) => ({ data }))();
+export const dataReady = createAction('data/DATA_READY', (data: DataState = {}) => ({
+  data,
+}))();
 
 export const fetchAppData = (currentRoute: FetchingRoute, prevRoute: FetchingRoute | null) => {
   return async (dispatch: Dispatch): Promise<void> => {

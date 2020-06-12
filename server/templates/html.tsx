@@ -10,7 +10,7 @@ type Props = {
   css?: string[];
   inlineScripts?: string[];
   scripts?: string[];
-  state?: RootState | {};
+  state?: RootState | Record<string, unknown>;
   helmet?: Partial<HelmetData>;
 };
 

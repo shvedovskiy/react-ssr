@@ -21,15 +21,15 @@
     "build": "cross-env NODE_ENV=production node config/scripts/build.js",
     "_postbuild": "precompress -e .DS_Store,.map ./build/",
     "production": "pm2-runtime start config/ecosystem.config.js --env production",
-    "lint:typescript": "tsc -p server/tsconfig.json --noEmit && tsc --noEmit",
-    "lint:eslint": "eslint '{src,server}/**/*.{js?(x),ts?(x)}' --fix",
-    "lint:prettier": "prettier --write \"{src,server}/**/*.{js?(x),ts?(x),css,json}\"",
-    "lint:stylelint": "stylelint \"src/**/*.css\"",
+    "lint:typescript": "tsc --noEmit",
+    "lint:eslint": "eslint \"{src,server}/**/*.{js?(x),ts?(x)}\" --fix",
+    "lint:prettier": "prettier --write --loglevel=warn .",
+    "lint:stylelint": "stylelint \"**/*.{css,less,scss}\"",
     "lint": "run-s lint:*"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "echo"
+      "pre-commit": "lint-staged"
     }
   },
   "devDependencies": {
@@ -140,7 +140,7 @@
     "jsesc": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "pm2": "^4.4.0",
-    "query-string": "^6.13.1",
+    "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.6",

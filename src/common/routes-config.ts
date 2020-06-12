@@ -1,8 +1,10 @@
+import { RouteConfig } from 'react-router-config';
+
 import { Home } from 'src/features/home/home';
 import { Data } from 'src/features/data/components/data';
 import { NotFound } from 'src/common/components/not-found/not-found';
 
-export const routes = [
+export const routes: RouteConfig[] = [
   {
     key: 'home',
     path: '/',

@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
-import qs from 'query-string';
+import { parse } from 'qs';
 
 import { loadData } from '../../api/load-data';
 
@@ -14,16 +14,16 @@ async function fetchOnLocationChange(
 ) {
   const currentRoute = {
     pathname: location.pathname,
-    query: qs.parse(location.search),
+    query: parse(location.search),
   };
   const prevRoute = {
     pathname: prevLocation.pathname,
-    query: qs.parse(prevLocation.search),
+    query: parse(prevLocation.search),
   };
   await loadData(dispatch, currentRoute, prevRoute);
 }
 
-export const withRouteHandling = <BaseProps extends {}>(
+export const withRouteHandling = <BaseProps extends Record<string, unknown>>(
   BaseComponent: ComponentType<BaseProps>,
 ) =>
   function RouteHandlerHOC(props: BaseProps) {

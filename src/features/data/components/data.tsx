@@ -6,6 +6,8 @@ import * as dataActions from '../actions';
 import { useActions } from 'src/common/utils/use-action';
 
 export function Data() {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const { fetchAppData } = useActions(dataActions);
   const { title = '' } = useSelector((state: RootState) => state.data);
 

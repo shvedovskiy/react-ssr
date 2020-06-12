@@ -2,7 +2,7 @@ import React from 'react';
 import { StaticRouterContext } from 'react-router';
 
 type Props = {
-  staticContext: StaticRouterContext;
+  staticContext?: StaticRouterContext;
 };
 
 export const NotFound = ({ staticContext = {} }: Props) => {

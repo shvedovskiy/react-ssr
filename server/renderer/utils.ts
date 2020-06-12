@@ -15,6 +15,7 @@ export function getInlinedJavaScript(entrypoints: string[], readFile: typeof rea
     .filter(file => file.match(RUNTIME_JS))
     .map(file => {
       const filePath = path.join(paths.client.output, ...file.split('/'));
+      console.log(filePath);
       return sourceMappingURL.removeFrom(readFile(filePath, 'utf8'));
     });
 }
