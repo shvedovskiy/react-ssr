@@ -97,7 +97,7 @@
     "postcss-safe-parser": "^4.0.2",
     "precompress": "^6.2.5",
     "prettier": "^2.0.5",
-    "react-dev-utils": "^10.2.1",
+    "react-dev-utils": "^11.0.4",
     "react-helmet": "^6.1.0",
     "react-hot-loader": "^4.12.21",
     "react-scripts": "^3.4.1",
